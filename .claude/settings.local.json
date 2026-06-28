@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -m 8 http://localhost:5001/api/docs/ -o /dev/null -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(echo \"exit:$?\")",
+      "Read(//private/tmp/**)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -m 8 -H 'X-API-Key: __TRACKED_VAR__' http://localhost:5001/api/v1/boards/board-1781863333415 -o /tmp/board_eng3.json -w 'export: HTTP %{http_code}\\\\n')",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s -m 8 -H 'X-API-Key: __CMDSUB_OUTPUT__' http://localhost:5001/api/v1/boards/board-1782093483846)",
+      "WebFetch(domain:pamojaeducation.com)",
+      "Bash(curl -s -m 4 http://localhost:5001/api/docs/ -o /dev/null -w \"5001: %{http_code}\\\\n\")",
+      "Bash(curl -s -m 4 http://localhost:5173/ -o /dev/null -w \"5173: %{http_code}\\\\n\")",
+      "Bash(python3 /tmp/build_arena2.py)",
+      "Bash(cat \"/Users/sitthi.pha/Downloads/1_1_meeting_prep.md\" 2>/dev/null | head -120 || echo \"FILE NOT FOUND/READABLE\")",
+      "Read(//Users/sitthi.pha/Downloads/**)"
+    ]
+  }
+}
