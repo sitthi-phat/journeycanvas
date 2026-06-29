@@ -77,6 +77,7 @@ function FlowCanvas() {
     addNode,
     updatePresenterViewport,
     copySelectedElements,
+    cutSelectedElements,
     pasteCopiedElements,
     updateNodeGroupMembership,
     addImageAtPosition,
@@ -104,12 +105,16 @@ function FlowCanvas() {
       const mod = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
       const isCopy = mod && key === 'c';
+      const isCut = mod && key === 'x';
       const isUndo = mod && key === 'z' && !e.shiftKey;
       const isRedo = (mod && key === 'z' && e.shiftKey) || (e.ctrlKey && key === 'y');
 
       if (isCopy) {
         e.preventDefault();
         copySelectedElements();
+      } else if (isCut) {
+        e.preventDefault();
+        cutSelectedElements();
       } else if (isRedo) {
         e.preventDefault();
         redo();
@@ -120,7 +125,7 @@ function FlowCanvas() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [copySelectedElements, undo, redo]);
+  }, [copySelectedElements, cutSelectedElements, undo, redo]);
 
   // 1b. Single paste handler: an image on the clipboard drops onto the canvas;
   //     otherwise paste previously-copied nodes (unless typing in a field).

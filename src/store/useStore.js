@@ -699,6 +699,33 @@ export const useStore = create((set, get) => ({
     set({ copiedElements: { nodes: selectedNodes, edges: selectedEdges } });
   },
 
+  // Cut = copy selected to the clipboard, then remove them in one undoable step.
+  cutSelectedElements: () => {
+    const { nodes, edges, socket, boardId } = get();
+    const selectedNodes = nodes.filter(n => n.selected);
+    const selectedEdges = edges.filter(e => e.selected);
+    if (selectedNodes.length === 0) return;
+
+    get().pushHistory();
+    const removedIds = new Set(selectedNodes.map(n => n.id));
+    const remainingNodes = nodes.filter(n => !removedIds.has(n.id));
+    // Drop selected edges and any edge attached to a removed node.
+    const remainingEdges = edges.filter(
+      e => !e.selected && !removedIds.has(e.source) && !removedIds.has(e.target)
+    );
+
+    set({
+      copiedElements: { nodes: selectedNodes, edges: selectedEdges },
+      nodes: remainingNodes,
+      edges: remainingEdges
+    });
+    if (socket) {
+      socket.emit('nodes-update', { boardId, nodes: remainingNodes });
+      socket.emit('edges-update', { boardId, edges: remainingEdges });
+    }
+    scheduleSave(get);
+  },
+
   pasteCopiedElements: () => {
     const { copiedElements, boardId, socket } = get();
     if (!copiedElements || !boardId) return;
